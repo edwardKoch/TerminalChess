@@ -29,9 +29,11 @@ class Board{
 
     void translateMove2Cords(string move, int& movY, int& movX);
     Piece* getPieceAt(string move);
-    bool isValidMove(string start, string end);
+    bool canMakeMove(string start, string end);
+    bool isValidMove(Piece* p1, Piece* p2);
     void movePiece(Piece* p1, Piece* p2);
     bool hasPath(Piece* p1, Piece* p2);
+    bool isCheck(bool colorIsW);
 
     void initializeBoard();
     void placeNullBorder();

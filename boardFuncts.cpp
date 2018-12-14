@@ -25,20 +25,22 @@ void Board::playBoard()
     do {
       cout << "White to Move: ";
       cin >> startPos >> endPos;
-    } while(!isValidMove(startPos, endPos));
+    } while(!canMakeMove(startPos, endPos));
     moveHistory.push_back(to_string(moveCounter)+". ");
     moveHistory.push_back(string(1, getPieceAt(startPos)->id) + endPos+" ");
     cout << "Moving " << getPieceAt(startPos)->id << " at " + startPos +" to "+endPos<< endl;
     movePiece(getPieceAt(startPos), getPieceAt(endPos));
+    isCheck(1);
 
     printBoard();
     do {
       cout << "Black to Move: ";
       cin >> startPos >> endPos;
-    } while(!isValidMove(startPos, endPos));
+    } while(!canMakeMove(startPos, endPos));
     moveHistory.push_back(string(1, getPieceAt(startPos)->id) + endPos+" ");
     cout << "Moving " << getPieceAt(startPos)->id << " at " + startPos +" to "+endPos<< endl;
     movePiece(getPieceAt(startPos), getPieceAt(endPos));
+    isCheck(0);
 
   } while(!checkTest);
 
@@ -95,12 +97,16 @@ Piece* Board::getPieceAt(string move)
 
   return board[yCord][xCord];
 }
-
-bool Board::isValidMove(string start, string end)
+bool Board::canMakeMove(string start, string end)
 {
   Piece* p1 = getPieceAt(start);
   Piece* p2 = getPieceAt(end);
 
+  return isValidMove(p1, p2);
+}
+
+bool Board::isValidMove(Piece* p1, Piece* p2)
+{
   //For Pawn Captures
   if(tolower(p1->id) == 'p')
   {
@@ -249,6 +255,41 @@ bool Board::hasPath(Piece* p1, Piece* p2)
   }
 
 
+  return false;
+}
+
+bool Board::isCheck(bool colorIsW)
+{
+  Piece* king;
+
+  for(int y = 2; y < BOARDSIZE-2; y++)
+  {
+    for(int x = 2; x < BOARDSIZE-2; x++)
+    {
+      if(tolower(board[y][x]->id) == 'k' && board[y][x]->isWhite != colorIsW)
+      {
+        king = board[y][x];
+        x = BOARDSIZE;
+        y = BOARDSIZE;
+      }
+    }
+  }
+
+  cout << king->y << king->x << king->id << endl;
+
+  for(int y = 2; y < BOARDSIZE-2; y++)
+  {
+    for(int x = 2; x < BOARDSIZE-2; x++)
+    {
+      if(board[y][x]->isWhite != colorIsW)
+      {
+        if(isValidMove(board[y][x], king))
+        {
+          cout << board[y][x]->y << board[y][x]->x << board[y][x]->id << endl;
+        }
+      }
+    }
+  }
   return false;
 }
 
