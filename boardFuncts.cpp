@@ -101,6 +101,25 @@ bool Board::isValidMove(string start, string end)
   Piece* p1 = getPieceAt(start);
   Piece* p2 = getPieceAt(end);
 
+  //For Pawn Captures
+  if(tolower(p1->id) == 'p')
+  {
+    if(p1->isWhite)
+    {
+      if(p2->y == p1->y-1 && (p2->x == p1->x-1 || p2->x == p1->x+1))
+      {
+        if(!p2->isWhite && p2->isBoard && !p2->isNull) return true;
+      }
+    }
+    else if(!p1->isWhite)
+    {
+      if(p2->y == p1->y+1 && (p2->x == p1->x-1 || p2->x == p1->x+1))
+      {
+        if(p2->isWhite && p2->isBoard && !p2->isNull) return true;
+      }
+    }
+  }
+  //For Other Moves
   if(p1->isValidMove(p2->y, p2->x))
   {
     if(p1->needsPath && !hasPath(p1, p2)) return false;
@@ -144,9 +163,10 @@ void Board::movePiece(Piece* p1, Piece* p2)
 
 bool Board::hasPath(Piece* p1, Piece* p2)
 {
+  //For Straight Up or Down Moves
   if(p1->x == p2->x && p1->y < p2->y)
   {
-    for(int y = p1->y+1; y <= p2->y; y++)
+    for(int y = p1->y+1; y < p2->y; y++)
     {
       if(!board[y][p1->x]->isNull) return false;
     }
@@ -154,16 +174,16 @@ bool Board::hasPath(Piece* p1, Piece* p2)
   }
   else if(p1->x == p2->x && p1->y > p2->y)
   {
-    for(int y = p1->y-1; y >= p2->y; y--)
+    for(int y = p1->y-1; y > p2->y; y--)
     {
       if(!board[y][p1->x]->isNull) return false;
     }
     return true;
   }
-
+  //For Straight Right or Left Moves
   if(p1->y == p2->y && p1->x < p2->x)
   {
-    for(int x = p1->x+1; x <= p2->x; x++)
+    for(int x = p1->x+1; x < p2->x; x++)
     {
       if(!board[p1->y][x]->isNull) return false;
     }
@@ -171,12 +191,63 @@ bool Board::hasPath(Piece* p1, Piece* p2)
   }
   else if(p1->y == p2->y && p1->x > p2->x)
   {
-    for(int x = p1->x-1; x >= p2->x; x--)
+    for(int x = p1->x-1; x > p2->x; x--)
     {
       if(!board[p1->y][x]->isNull) return false;
     }
     return true;
   }
+  //For Diagonal Up Left or Down Right Moves
+  if(p1->y > p2->y && p1->x > p2->x)
+  {
+    for(int y = p1->y-1; y > p2->y; y--)
+    {
+      for(int x = p1->x-1; x > p2->x; x--)
+      {
+        if(!board[y][x]->isNull) return false;
+        y--;
+      }
+    }
+    return true;
+  }
+  else if(p1->y < p2->y && p1->x < p2->x)
+  {
+    for(int y = p1->y+1; y < p2->y; y++)
+    {
+      for(int x = p1->x+1; x < p2->x; x++)
+      {
+        if(!board[y][x]->isNull) return false;
+        y++;
+      }
+    }
+    return true;
+  }
+  //For Diagonal Up Right or Down Left Moves
+  if(p1->y > p2->y && p1->x < p2->x)
+  {
+    for(int y = p1->y-1; y > p2->y; y--)
+    {
+      for(int x = p1->x+1; x < p2->x; x++)
+      {
+        if(!board[y][x]->isNull) return false;
+        y--;
+      }
+    }
+    return true;
+  }
+  else if(p1->y < p2->y && p1->x > p2->x)
+  {
+    for(int y = p1->y+1; y < p2->y; y++)
+    {
+      for(int x = p1->x-1; x > p2->x; x--)
+      {
+        if(!board[y][x]->isNull) return false;
+        y++;
+      }
+    }
+    return true;
+  }
+
 
   return false;
 }
