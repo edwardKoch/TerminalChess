@@ -10,6 +10,8 @@ ToDo List:
 
   -implement pawn captures
   
+  -implement Check and Checkmate
+  
   -add x to move History when piece is captured
 
   -remove P and p from move History
