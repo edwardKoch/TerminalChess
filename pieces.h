@@ -102,7 +102,7 @@ class Knight : public Piece{
       if((newx == x+1 && (newy == y+2 || newy == y-2)) ||
          (newx == x-1 && (newy == y+2 || newy == y-2)) ||
          (newy == y+1 && (newx == x+2 || newx == x-2)) ||
-         (newy == y+1 && (newx == x+2 || newx == x-2))) return true;
+         (newy == y-1 && (newx == x+2 || newx == x-2))) return true;
 
       return false;
     }

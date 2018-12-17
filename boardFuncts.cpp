@@ -13,7 +13,7 @@ void Board::playBoard()
 {
   string startPos;
   string endPos;
-  bool checkTest = false;
+  bool mate = false;
   cout << "\tWelcome to Chess!\nPlease Enter Moves in the Format: \"e2 e4\"" << endl;
   cout << "\"(Starting Positon of Piece)(space)(Ending Position of Piece)\"" << endl;
   cout << "May the Best Player Win! Good Luck!" << endl << endl;
@@ -42,7 +42,7 @@ void Board::playBoard()
     movePiece(getPieceAt(startPos), getPieceAt(endPos));
     isCheck(0);
 
-  } while(!checkTest);
+  } while(!mate);
 
 }
 
@@ -97,6 +97,7 @@ Piece* Board::getPieceAt(string move)
 
   return board[yCord][xCord];
 }
+
 bool Board::canMakeMove(string start, string end)
 {
   Piece* p1 = getPieceAt(start);
@@ -260,6 +261,7 @@ bool Board::hasPath(Piece* p1, Piece* p2)
 
 bool Board::isCheck(bool colorIsW)
 {
+  //Checks if colorIsW has put the other color in check
   Piece* king;
 
   for(int y = 2; y < BOARDSIZE-2; y++)
@@ -275,17 +277,16 @@ bool Board::isCheck(bool colorIsW)
     }
   }
 
-  cout << king->y << king->x << king->id << endl;
-
   for(int y = 2; y < BOARDSIZE-2; y++)
   {
     for(int x = 2; x < BOARDSIZE-2; x++)
     {
-      if(board[y][x]->isWhite != colorIsW)
+      if(board[y][x]->isWhite == colorIsW && !board[y][x]->isNull)
       {
         if(isValidMove(board[y][x], king))
         {
-          cout << board[y][x]->y << board[y][x]->x << board[y][x]->id << endl;
+          cout << "CHECK FROM "<< board[y][x]->y << board[y][x]->x << board[y][x]->id << endl;
+          return true;
         }
       }
     }
