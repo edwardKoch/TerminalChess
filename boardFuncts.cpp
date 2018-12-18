@@ -165,7 +165,7 @@ void Board::movePiece(Piece* p1, Piece* p2)
   board[newY][newX] = board[oldY][oldX];
   board[newY][newX]->movePiece(newY, newX);
 
-  board[oldY][oldX] = new NullPiece(oldY, oldX, true, true, '-');
+  board[oldY][oldX] = new NullPiece(oldY, oldX, true, true, ' ');
 }
 
 bool Board::hasPath(Piece* p1, Piece* p2)
@@ -355,7 +355,7 @@ void Board::placeMidBoard()
   {
     for(int x = 2; x < 10; x++)
     {
-      board[y][x] = new NullPiece(y, x, true, true, '-');
+      board[y][x] = new NullPiece(y, x, true, true, ' ');
     }
   }
 }
@@ -385,11 +385,20 @@ void Board::printBoard()
     for(int x = 0; x < BOARDSIZE; x++)
     {
       if(board[y][x]->id == 'x') cout << "\e[0;45m" << "  " << "\e[0m";
-      else if(board[y][x]->isNull && board[y][x]->id != '-')
+      else if(board[y][x]->isNull && board[y][x]->id != ' ')
       {
         cout << "\e[0;45m" << board[y][x]->id << " " << "\e[0m";
       }
-      else cout << board[y][x]->id << " ";
+      else if((y+x)%2 == 0)
+      {
+        if(!board[y][x]->isWhite) cout << "\e[30;46m" << board[y][x]->id << " " << "\e[0m";
+        else cout << "\e[0;46m" << board[y][x]->id << " " << "\e[0m";
+      }
+      else
+      {
+        if(!board[y][x]->isWhite) cout << "\e[30;44m" << board[y][x]->id << " " << "\e[0m";
+        else cout << "\e[0;44m" << board[y][x]->id << " " << "\e[0m";
+      }
     }
     cout << endl;
   }

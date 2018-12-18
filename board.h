@@ -24,7 +24,7 @@ class Board{
       moveHistory.clear();
       initializeBoard();
     }
-
+    
     void playBoard();
 
     void translateMove2Cords(string move, int& movY, int& movX);
